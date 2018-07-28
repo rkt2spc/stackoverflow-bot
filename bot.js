@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const winston = require('winston');
 const moment = require('moment-timezone');
 const asyncjs = require('async');
+const uuid = require('uuid');
 
 // Constants
 const LOGIN_PAGE = 'https://stackoverflow.com/users/login';
@@ -11,8 +12,8 @@ const LOGIN_PAGE = 'https://stackoverflow.com/users/login';
 // Config
 const config = {
   general: {
-    time_zone       : process.env.TIME_ZONE,
-    report_to_email : process.env.REPORT_TO_EMAIL,
+    timezone      : process.env.TIME_ZONE,
+    reportToEmail : process.env.REPORT_TO_EMAIL,
   },
   smtp: {
     host     : process.env.SMTP_HOST,
@@ -51,7 +52,8 @@ const task = asyncjs.retryable({
   interval : (times) => times * 500,
 }, (done) => {
   nightmare({
-    show             : true,
+    webPreferences   : { partition: uuid.v4() },
+    show             : false,
     waitTimeout      : 10000,
     gotoTimeout      : 10000,
     loadTimeout      : 10000,
@@ -76,13 +78,15 @@ const task = asyncjs.retryable({
 
 // Run Visit StackOverflow task
 task((err, progressText) => {
+  const today = moment(Date.now()).tz(config.general.timezone);
+
   if (err) {
     logger.error('Failed visiting StackOverflow', err);
     mailer.sendMail({
-      from    : '"Bot" <bot@nmtuan.space>',
-      to      : config.general.report_to_email,
-      subject : `[${moment(Date.now()).tz(config.general.time_zone).format('YYYY-MM-DD')}] StackOverflow Fanatic Badge Daily Report (Error)`,
-      text    : `Hi boss. Something went wrong: ${err}`,
+      from    : '"StackOverflow Bot" <bot@nmtuan.space>',
+      to      : config.general.reportToEmail,
+      subject : `${today.format('YYYY-MM-DD')} StackOverflow Fanatic Badge Daily Report (Error)`,
+      html    : `<b>Date:</b> ${today.format('dddd YYYY-MM-DD HH:mm:ss Z')} (${config.general.timezone})<br><b>Error:</b> ${err}`,
     }, (sendMailErr, info) => {
       if (sendMailErr) logger.error('Failed to send error report email', sendMailErr);
       else logger.info('Error report email sent', { messageId: info.messageId });
@@ -92,10 +96,10 @@ task((err, progressText) => {
 
   logger.info(`Finish visiting StackOverflow. Progress: ${progressText}`);
   mailer.sendMail({
-    from    : '"Bot" <bot@nmtuan.space>',
-    to      : config.general.report_to_email,
-    subject : `[${moment(Date.now()).tz(config.general.time_zone).format('YYYY-MM-DD')}] StackOverflow Fanatic Badge Daily Report (${progressText})`,
-    text    : `Hi boss. I've been visiting StackOverflow on your behalf. Here is the current streak: ${progressText}`,
+    from    : '"StackOverflow Bot" <bot@nmtuan.space>',
+    to      : config.general.reportToEmail,
+    subject : `${today.format('YYYY-MM-DD')} StackOverflow Fanatic Badge Daily Report (${progressText})`,
+    html    : `<b>Date:</b> ${today.format('dddd YYYY-MM-DD HH:mm:ss Z')} (${config.general.timezone})<br><b>Current streak:</b> ${progressText}`,
   }, (err, info) => {
     if (err) logger.error('Failed to send progress report email', err);
     else logger.info('Progress report email sent', { messageId: info.messageId });
