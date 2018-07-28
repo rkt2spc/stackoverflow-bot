@@ -86,7 +86,7 @@ task((err, progressText) => {
       from    : '"StackOverflow Bot" <bot@nmtuan.space>',
       to      : config.general.reportToEmail,
       subject : `${today.format('YYYY-MM-DD')} StackOverflow Fanatic Badge Daily Report (Error)`,
-      html    : `<b>Date:</b> ${today.format('dddd YYYY-MM-DD HH:mm:ss Z')} (${config.general.timezone})<br><b>Error:</b> ${err}`,
+      html    : `<b>Time:</b> ${today.format('dddd YYYY-MM-DD HH:mm:ss Z')} (${config.general.timezone})<br><b>Error:</b> ${err}`,
     }, (sendMailErr, info) => {
       if (sendMailErr) logger.error('Failed to send error report email', sendMailErr);
       else logger.info('Error report email sent', { messageId: info.messageId });
@@ -99,7 +99,7 @@ task((err, progressText) => {
     from    : '"StackOverflow Bot" <bot@nmtuan.space>',
     to      : config.general.reportToEmail,
     subject : `${today.format('YYYY-MM-DD')} StackOverflow Fanatic Badge Daily Report (${progressText})`,
-    html    : `<b>Date:</b> ${today.format('dddd YYYY-MM-DD HH:mm:ss Z')} (${config.general.timezone})<br><b>Current streak:</b> ${progressText}`,
+    html    : `<b>Time:</b> ${today.format('dddd YYYY-MM-DD HH:mm:ss Z')} (${config.general.timezone})<br><b>Current streak:</b> ${progressText}`,
   }, (err, info) => {
     if (err) logger.error('Failed to send progress report email', err);
     else logger.info('Progress report email sent', { messageId: info.messageId });
