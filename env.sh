@@ -6,7 +6,8 @@ export DISPLAY=:9.0
 ######################################
 # Configurable environment variables #
 ######################################
-# Reporting Config
+# General Config
+export TIME_ZONE = '<fill-me>'
 export REPORT_TO_EMAIL='<fill-me>'
 
 # StackOverflow Config
