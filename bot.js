@@ -53,7 +53,7 @@ const task = asyncjs.retryable({
 }, (done) => {
   nightmare({
     webPreferences   : { partition: uuid.v4() },
-    show             : false,
+    show             : true,
     waitTimeout      : 10000,
     gotoTimeout      : 10000,
     loadTimeout      : 10000,
@@ -68,7 +68,7 @@ const task = asyncjs.retryable({
     .click('a.my-profile')
     .wait('#top-cards')
     .evaluate(() => {
-      const element = document.querySelector('#top-cards span.-count');
+      const element = document.querySelector('#top-cards span.ml-auto.fs-caption');
       return element ? element.innerText : 'null';
     })
     .end()
