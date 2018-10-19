@@ -22,13 +22,13 @@
     "async": "^2.6.1",
     "moment-timezone": "^0.5.21",
     "nightmare": "^3.0.1",
-    "nodemailer": "^4.6.7",
+    "nodemailer": "^4.6.8",
     "uuid": "^3.3.2",
-    "winston": "^3.0.0"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-plugin-import": "^2.13.0"
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }
