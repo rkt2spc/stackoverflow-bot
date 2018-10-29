@@ -10,7 +10,7 @@ const uuid = require('uuid');
 // Constants
 const LOGIN_PAGE = 'https://stackoverflow.com/users/login';
 const FEATURED_QUESTIONS_PAGE = 'https://stackoverflow.com/?tab=featured';
-const DAILY_VOTE_LIMIT = 40;
+const DAILY_VOTE_LIMIT = 35;
 
 // Config
 const config = {
@@ -51,7 +51,7 @@ const mailer = nodemailer.createTransport({
 
 // Create Visit StackOverflow retryable task
 const task = asyncjs.retryable({
-  times    : 1,
+  times    : 4,
   interval : (times) => times * 500,
 }, (done) => {
   const automation = nightmare({
@@ -111,7 +111,7 @@ const task = asyncjs.retryable({
               automation
                 .click('a.vote-up-off')
                 .wait('a.vote-up-on')
-                .wait(300)
+                .wait(1000)
                 .then(() => {
                   questions_voted += 1;
                   next();
